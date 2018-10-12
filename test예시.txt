@@ -1,0 +1,1 @@
+`{"userArr":[{"latitude":11.111, "longitude":22.222}, {"latitude":22.111, "longitude":22.522}, {"latitude":33.111, "longitude":22.322}, {"latitude":11.111, "longitude":44.322}]}`, A
