@@ -10,6 +10,23 @@
 #include <TimeOptimizationAlgorithm.h>
 #include <algorithm>
 
+// write json data example
+void sendJsonObject(const v8::FunctionCallbackInfo<v8::Value> &args, Position midPoint)
+{
+    v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
+
+    v8::Local<v8::String> latitudeProp = Nan::New("latitude").ToLocalChecked();
+    v8::Local<v8::String> longitudeProp = Nan::New("longitude").ToLocalChecked();
+
+    v8::Local<v8::Value> latitudeValue = Nan::New(midPoint.getLatitude());
+    v8::Local<v8::Value> longitudeValue = Nan::New(midPoint.getLongitude());
+
+    Nan::Set(jsonObject, latitudeProp, latitudeValue);
+    Nan::Set(jsonObject, longitudeProp, longitudeValue);
+
+    args.GetReturnValue().Set(jsonObject);
+}
+
 Position startAlgorithm(std::vector<Position> &positions,
     v8::Isolate *isolate, v8::Local<v8::Function> &cbGetTotalTime)
 {
@@ -46,7 +63,7 @@ void initPositions(const v8::FunctionCallbackInfo<v8::Value> &jsonObject,
 }
 
 // parse json data example
-void TimeOptimizationCenterAlgorithm(const v8::FunctionCallbackInfo<v8::Value> &args)
+void TimeOptimizationCenterFindAlgorithm(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     v8::Isolate* isolate = args.GetIsolate();
     // 콜백함수 설정
@@ -54,25 +71,11 @@ void TimeOptimizationCenterAlgorithm(const v8::FunctionCallbackInfo<v8::Value> &
     
     std::vector<Position> positions;
     initPositions(args, positions);
-    std::cout << "HaI" << std::endl;
-    startAlgorithm(positions, isolate, cbFunction);
-}
+    
+    Position midPoint = startAlgorithm(positions, isolate, cbFunction);
 
-// write json data example
-void Method4(const v8::FunctionCallbackInfo<v8::Value> &args)
-{
-    v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
-
-    v8::Local<v8::String> fooProp = Nan::New("foo").ToLocalChecked();
-    v8::Local<v8::String> barProp = Nan::New("bar").ToLocalChecked();
-
-    v8::Local<v8::Value> fooValue = Nan::New(456);
-    v8::Local<v8::Value> barValue = Nan::New("awesome").ToLocalChecked();
-
-    Nan::Set(jsonObject, fooProp, fooValue);
-    Nan::Set(jsonObject, barProp, barValue);
-
-    args.GetReturnValue().Set(jsonObject);
+    // 노드로 값 리턴
+    sendJsonObject(args, midPoint);
 }
     
 void init(v8::Local<v8::Object> exports) { // 중요 3. Method 정의
