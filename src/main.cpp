@@ -1,5 +1,3 @@
-#include <node/node.h> // 중요 1. header
-#include <nan.h>
 #include <iostream>
 #include <string>
 #include <Position.h>
@@ -8,45 +6,27 @@
 #include <ConcavetToConvex.h>
 #include <PointInPolygonAlgorithm.h>
 #include <TimeOptimizationAlgorithm.h>
+#include <ODsay.h>
+
 #include <algorithm>
 
-// write json data example
-void sendJsonObject(const v8::FunctionCallbackInfo<v8::Value> &args, Position midPoint)
-{
-    v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
+using namespace std;
 
-    v8::Local<v8::String> latitudeProp = Nan::New("latitude").ToLocalChecked();
-    v8::Local<v8::String> longitudeProp = Nan::New("longitude").ToLocalChecked();
-
-    v8::Local<v8::Value> latitudeValue = Nan::New(midPoint.getLatitude());
-    v8::Local<v8::Value> longitudeValue = Nan::New(midPoint.getLongitude());
-
-    Nan::Set(jsonObject, latitudeProp, latitudeValue);
-    Nan::Set(jsonObject, longitudeProp, longitudeValue);
-
-    args.GetReturnValue().Set(jsonObject);
-}
-
-Position startAlgorithm(std::vector<Position> &positions,
-    v8::Isolate *isolate, v8::Local<v8::Function> &cbGetTotalTime)
+Position startAlgorithm(std::vector<Position> &positions)
 {
     ConcavetToConvex CTCAlgorithm;
     // conver concavet to convex
     CTCAlgorithm.convert(positions);
     // 시간 최적화 알고리즘 초기화
-    TimeOptimizationAlgorithm TOAlgorithm(positions, isolate, cbGetTotalTime);
+    TimeOptimizationAlgorithm TOAlgorithm(positions);
 
     return TOAlgorithm.start();
 }
 
-void initPositions(const v8::FunctionCallbackInfo<v8::Value> &jsonObject,
-    std::vector<Position> &positions)
+void initPositions(vector<Position> &positions, char *jsonString)
 {
-    v8::String::Utf8Value v8_jsonString(jsonObject[0]);
-    std::string jsonString(*v8_jsonString);
-
     rapidjson::Document document;
-    document.Parse(jsonString.c_str());
+    document.Parse(jsonString);
 
     assert(document["userArr"].IsArray());
     const rapidjson::Value &userArr = document["userArr"];
@@ -62,24 +42,23 @@ void initPositions(const v8::FunctionCallbackInfo<v8::Value> &jsonObject,
     sort(positions.begin(), positions.end());
 }
 
-// parse json data example
-void TimeOptimizationCenterFindAlgorithm(const v8::FunctionCallbackInfo<v8::Value> &args)
+int main(int argc, char *argv[])
 {
-    v8::Isolate* isolate = args.GetIsolate();
-    // 콜백함수 설정
-    v8::Local<v8::Function> cbFunction = v8::Local<v8::Function>::Cast(args[1]);
-    
-    std::vector<Position> positions;
-    initPositions(args, positions);
-    
-    Position midPoint = startAlgorithm(positions, isolate, cbFunction);
+    if(argc < 2){
+        cout << "argument is few" << endl;
+        exit(1);
+    }
+    cout << argv[1] << endl;
 
-    // 노드로 값 리턴
-    sendJsonObject(args, midPoint);
-}
     
-void init(v8::Local<v8::Object> exports) { // 중요 3. Method 정의
-    NODE_SET_METHOD(exports, "TOCFA", TimeOptimizationCenterFindAlgorithm);
-}
+    vector<Position> positions;
 
-NODE_MODULE(addon, init) // 중요 2. 모듈 정의
+    initPositions(positions, argv[1]);
+
+    Position midPoint = startAlgorithm(positions);
+
+    cout << "{ \"latitude\": " << midPoint.getLatitude()
+        << ", \"longitude\": " << midPoint.getLongitude();
+
+    return 0;
+}

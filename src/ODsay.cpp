@@ -1,9 +1,11 @@
 #include "ODsay.h"
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
 
-int ODsay::getPathTime(Position src, Position dest)
+string ODsay::getPathInfo(const Position &src, const Position &dest)
 {
     const string subUri = "/v1/api/searchPubTransPath";
-    int PathTime;
+    string pathInfo;
 
     http_client client(baseUri);
     uri_builder builder(subUri);
@@ -14,25 +16,32 @@ int ODsay::getPathTime(Position src, Position dest)
     builder.append_query(U("EY"), U(dest.getLatitude()));
     builder.append_query(U("apiKey"), apiKey);
 
-    cout << builder.to_string() << endl;
-
     auto requestTask = client.request(methods::GET, builder.to_string())
-    .then([=](http_response response)
-    {
+    .then([=](http_response response) {
         return response.extract_string();
-    }).then([&](string_t str)
-    {
-        PathTime = stoi(str);
+    }).then([&](string_t str) {
+        pathInfo = str;
     });
 
     // Wait for all the outstanding I/O to complete and handle any exceptions
-    try
-    {
+    try {
         requestTask.wait();
     }
-    catch (const std::exception &e)
-    {
+    catch (const std::exception &e) {
         printf("Error exception:%s\n", e.what());
     }
-    return PathTime;
+    return pathInfo;
+}
+
+int ODsay::getPathMinTime(Position src, Position dest)
+{
+    string jsonPathInfo = getPathInfo(src, dest);
+
+    rapidjson::Document document;
+    document.Parse(jsonPathInfo.c_str());
+
+    // 최소 시간 가져오기
+    int minTime = document["result"]["path"][0]["info"]["totalTime"].GetInt();
+
+    return minTime;
 }

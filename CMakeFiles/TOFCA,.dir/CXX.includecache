@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kuril/workspace/DamoyeoServer/src/main.cpp
+iostream
+-
+string
+-
+Position.h
+-
+rapidjson/rapidjson.h
+-
+rapidjson/document.h
+-
+ConcavetToConvex.h
+-
+PointInPolygonAlgorithm.h
+-
+TimeOptimizationAlgorithm.h
+-
+algorithm
+-
+

@@ -3,12 +3,10 @@
 #include <math.h>
 #include <utility>
 #include <algorithm>
-#include <nan.h>
 #include <node/node.h>
-
-TimeOptimizationAlgorithm::TimeOptimizationAlgorithm(std::vector<Position> &points,
-	v8::Isolate *isolate, v8::Local<v8::Function> &cbGetTotalTime)
-	:users(points), isolate(isolate), cbGetTotalTime(cbGetTotalTime)
+using namespace std;
+TimeOptimizationAlgorithm::TimeOptimizationAlgorithm(std::vector<Position> &points)
+	:users(points)
 {
 }
 
@@ -22,7 +20,6 @@ Position TimeOptimizationAlgorithm::start()
 	int consideredUserCnt = users.size();
 
 	std::vector<int> times;
-
 	while (true)
 	{	
 		for (Position point : users) {
@@ -57,15 +54,7 @@ Position TimeOptimizationAlgorithm::getCenterOfGravity()
 
 int TimeOptimizationAlgorithm::getPathTime(Position src, Position dest)
 {
-	// src 부터 dest까지 이동 시간 반환
-	const int argc = 4;
-	// node 함수 parameter 설정
-	v8::Local<v8::Value> argv[argc] = {v8::Number::New(isolate, src.getLatitude()),
-		v8::Number::New(isolate, src.getLongitude()),
-		v8::Number::New(isolate, dest.getLatitude()),
-		v8::Number::New(isolate, dest.getLongitude())};
-
-	return this->cbGetTotalTime.Call(argc, argv)->NumberValue();
+	return 1;
 }
 
 bool TimeOptimizationAlgorithm::isOptimizedResult(std::vector<int> times, int userCnt)

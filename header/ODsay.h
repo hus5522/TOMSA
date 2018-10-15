@@ -18,8 +18,9 @@ private:
     const string apiKey = U("");
     const string baseUri = U("https://api.odsay.com/");
 
+    string getPathInfo(const Position &src, const Position &dest);
 public:
-    int getPathTime(Position src, Position dest);
+    int getPathMinTime(Position src, Position dest);
 
 };
 

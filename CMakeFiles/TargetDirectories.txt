@@ -1,0 +1,5 @@
+/home/kuril/workspace/DamoyeoServer/CMakeFiles/edit_cache.dir
+/home/kuril/workspace/DamoyeoServer/CMakeFiles/rebuild_cache.dir
+/home/kuril/workspace/DamoyeoServer/src/CMakeFiles/rebuild_cache.dir
+/home/kuril/workspace/DamoyeoServer/src/CMakeFiles/edit_cache.dir
+/home/kuril/workspace/DamoyeoServer/src/CMakeFiles/../TOMSA.dir

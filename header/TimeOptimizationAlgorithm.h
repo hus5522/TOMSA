@@ -3,18 +3,14 @@
 
 #include <Position.h>
 #include <vector>
-#include <nan.h>
 
 class TimeOptimizationAlgorithm
 {
 private:
 	std::vector<Position> users;
-	Nan::Callback cbGetTotalTime;
-	v8::Isolate *isolate;
 
 public:
-	TimeOptimizationAlgorithm(std::vector<Position> &points,
-		v8::Isolate *isolate, v8::Local<v8::Function> &cbGetTotalTime);
+	TimeOptimizationAlgorithm(std::vector<Position> &points);
 	Position start();
 	
 private:	
