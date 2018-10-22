@@ -3,24 +3,34 @@
 #include <Position.h>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
-#include <ConcavetToConvex.h>
+#include <ConcaveToConvex.h>
 #include <PointInPolygonAlgorithm.h>
-#include <TimeOptimizationAlgorithm.h>
+#include <TOMSA.h>
 #include <ODsay.h>
-
+#include <Geolocation.h>
+#include <UntwistLine.h>
 #include <algorithm>
+
+#include <Windows.h>		// todo : 삭제
 
 using namespace std;
 
-Position startAlgorithm(std::vector<Position> &positions)
-{
-    ConcavetToConvex CTCAlgorithm;
-    // conver concavet to convex
-    CTCAlgorithm.convert(positions);
-    // 시간 최적화 알고리즘 초기화
-    TimeOptimizationAlgorithm TOAlgorithm(positions);
 
-    return TOAlgorithm.start();
+void timeMeasurement(vector<Position> &positions)
+{
+	LARGE_INTEGER liCounter1, liCounter2, liFrequency;
+
+	// 주파수(1초당 증가되는 카운트수)를 구한다.
+	QueryPerformanceFrequency(&liFrequency);
+	QueryPerformanceCounter(&liCounter1);
+
+	ODsay odsay;
+	odsay.getPathMinTime(positions[0], positions[1]);
+	/*TOMSA tomsa(positions);
+	Position midPoint = tomsa.start();*/
+
+	QueryPerformanceCounter(&liCounter2);
+	printf("수행시간 : %lf 초\n", (double)(liCounter2.QuadPart - liCounter1.QuadPart) / (double)liFrequency.QuadPart);
 }
 
 void initPositions(vector<Position> &positions, char *jsonString)
@@ -38,27 +48,45 @@ void initPositions(vector<Position> &positions, char *jsonString)
         positions.push_back(Position(user["latitude"].GetDouble(),
             user["longitude"].GetDouble()));
     }
-
-    sort(positions.begin(), positions.end());
 }
 
 int main(int argc, char *argv[])
 {
-    if(argc < 2){
+    /*if(argc < 2){
         cout << "argument is few" << endl;
         exit(1);
-    }
-    cout << argv[1] << endl;
+    }*/
 
-    
+	// 세종대 건대 부근
+	/*char tmp[] = "{\"userArr\":[{\"latitude\":37.550277,\"longitude\":127.073053},\
+	{\"latitude\":37.545036,\"longitude\":127.054245},\
+	{\"latitude\":37.535413,\"longitude\":127.062388},\
+	{\"latitude\":37.531359,\"longitude\":127.083799}]}";*/
+
+	// 꼬은거
+	/*char tmp[] = "{\"userArr\":[{\"latitude\":37.545036,\"longitude\":127.054245},\
+	{\"latitude\":37.550277,\"longitude\":127.073053},\
+	{\"latitude\":37.535413,\"longitude\":127.062388},\
+	{\"latitude\":37.531359,\"longitude\":127.083799}]}";*/
+
+	// 강북 강동 강남 강서
+	char tmp[] = "{\"userArr\":[{\"latitude\":37.565364,\"longitude\":126.985554},\
+	{\"latitude\":37.544172,\"longitude\":127.067588},\
+	{\"latitude\":37.487466,\"longitude\":127.026868},\
+	{\"latitude\":37.508402,\"longitude\":126.941398}]}";
+
+
     vector<Position> positions;
+    initPositions(positions, tmp);
 
-    initPositions(positions, argv[1]);
+	//timeMeasurement(positions);
 
-    Position midPoint = startAlgorithm(positions);
+	TOMSA tomsa(positions);
+    Position midPoint = tomsa.start();
 
-    cout << "{ \"latitude\": " << midPoint.getLatitude()
-        << ", \"longitude\": " << midPoint.getLongitude();
+	cout.precision(6);
+    cout << fixed << "{ \"latitude\": " << midPoint.getLatitude()
+        << ", \"longitude\": " << midPoint.getLongitude() << " }" << endl;
 
     return 0;
 }

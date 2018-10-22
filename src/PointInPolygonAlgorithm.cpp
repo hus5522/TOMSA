@@ -4,7 +4,7 @@ PointInPolygonAlgorithm::PointInPolygonAlgorithm()
 {
 }
 
-bool PointInPolygonAlgorithm::isInside(const Position target, const std::vector<Position> polygonPoints)
+bool PointInPolygonAlgorithm::isInside(const Position &target, const std::vector<Position> &polygonPoints)
 {
 	initPolygonLines(polygonPoints);
 

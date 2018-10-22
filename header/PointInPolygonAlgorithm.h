@@ -13,7 +13,7 @@ private:
 
 public:
 	PointInPolygonAlgorithm();
-	bool isInside(const Position target, const std::vector<Position> polygonPoints);
+	bool isInside(const Position &target, const std::vector<Position> &polygonPoints);
 
 
 private:
