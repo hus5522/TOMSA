@@ -4,16 +4,14 @@
 #include <math.h>
 #include <utility>
 #include <algorithm>
-#include <ConcaveToConvex.h>
 #include <UntwistLine.h>
+#include <ConvexHull.h>
 
 TOMSA::TOMSA(vector<Position> points)
 	:users(points)
 {
-	// 꼬여있는 다각형 풀기
-	UntwistLine::untwistLine(points);
-	// user 위치의 추천 범위 설정
-	boudaryPoints = ConcaveToConvex::convert(points);
+	// 경계 범위 설정
+	boudaryPoints = ConvexHull::getConvexHull(points);
 }
 
 

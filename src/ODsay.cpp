@@ -20,20 +20,14 @@ string ODsay::getPathInfo(const Position &src, const Position &dest)
 	string pathInfo;	// 요청에 대한 결과값을 저장할 변수
 
 	// ODsay api로 요청
-    auto requestTask = client.request(methods::GET, builder.to_string())
-    .then([=](http_response response) {
-        return response.extract_string();
-    }).then([&](string_t str) {
+	client.request(methods::GET, builder.to_string())
+		.then([](http_response response) {
+		return response.extract_string();
+	}).then([&](string_t str) {
 		pathInfo = conversions::to_utf8string(str);
-    });
+		cout << pathInfo << endl << endl;
+	}).wait();
 
-    // Wait for all the outstanding I/O to complete and handle any exceptions
-    try {
-        requestTask.wait();
-    }
-    catch (const exception &e) {
-		cout << "Error exception:%s\n" << e.what() << endl;
-    }
     return pathInfo;
 }
 
