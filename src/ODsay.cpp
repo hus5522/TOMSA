@@ -25,7 +25,6 @@ string ODsay::getPathInfo(const Position &src, const Position &dest)
 		return response.extract_string();
 	}).then([&](string_t str) {
 		pathInfo = conversions::to_utf8string(str);
-		cout << pathInfo << endl << endl;
 	}).wait();
 
     return pathInfo;
