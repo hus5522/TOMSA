@@ -11,7 +11,9 @@
 #include <UntwistLine.h>
 #include <algorithm>
 
-#include <Windows.h>		// todo : ì‚­ì œ
+#include <Windows.h>		// todo : »èÁ¦
+
+
 
 using namespace std;
 
@@ -20,7 +22,7 @@ void timeMeasurement(vector<Position> &positions)
 {
 	LARGE_INTEGER liCounter1, liCounter2, liFrequency;
 
-	// ì£¼íŒŒìˆ˜(1ì´ˆë‹¹ ì¦ê°€ë˜ëŠ” ì¹´ìš´íŠ¸ìˆ˜)ë¥¼ êµ¬í•œë‹¤.
+	// ÁÖÆÄ¼ö(1ÃÊ´ç Áõ°¡µÇ´Â Ä«¿îÆ®¼ö)¸¦ ±¸ÇÑ´Ù.
 	QueryPerformanceFrequency(&liFrequency);
 	QueryPerformanceCounter(&liCounter1);
 
@@ -30,7 +32,7 @@ void timeMeasurement(vector<Position> &positions)
 	Position midPoint = tomsa.start();*/
 
 	QueryPerformanceCounter(&liCounter2);
-	printf("ìˆ˜í–‰ì‹œê°„ : %lf ì´ˆ\n", (double)(liCounter2.QuadPart - liCounter1.QuadPart) / (double)liFrequency.QuadPart);
+	printf("¼öÇà½Ã°£ : %lf ÃÊ\n", (double)(liCounter2.QuadPart - liCounter1.QuadPart) / (double)liFrequency.QuadPart);
 }
 
 void initPositions(vector<Position> &positions, char *jsonString)
@@ -56,25 +58,26 @@ int main(int argc, char *argv[])
         cout << "argument is few" << endl;
         exit(1);
     }*/
-
-	// ì„¸ì¢…ëŒ€ ê±´ëŒ€ ë¶€ê·¼
-	/*char tmp[] = "{\"userArr\":[{\"latitude\":37.550277,\"longitude\":127.073053},\
+	/*
+	// ¼¼Á¾´ë °Ç´ë ºÎ±Ù
+	char tmp[] = "{\"userArr\":[{\"latitude\":37.550277,\"longitude\":127.073053},\
 	{\"latitude\":37.545036,\"longitude\":127.054245},\
 	{\"latitude\":37.535413,\"longitude\":127.062388},\
-	{\"latitude\":37.531359,\"longitude\":127.083799}]}";*/
-
-	// ê¼¬ì€ê±°
+	{\"latitude\":37.531359,\"longitude\":127.083799}]}";
+	*/
+	// ²¿Àº°Å
 	/*char tmp[] = "{\"userArr\":[{\"latitude\":37.545036,\"longitude\":127.054245},\
 	{\"latitude\":37.550277,\"longitude\":127.073053},\
 	{\"latitude\":37.535413,\"longitude\":127.062388},\
 	{\"latitude\":37.531359,\"longitude\":127.083799}]}";*/
 
-	// ê°•ë¶ ê°•ë™ ê°•ë‚¨ ê°•ì„œ
+	
+	// °­ºÏ °­µ¿ °­³² °­¼­
 	char tmp[] = "{\"userArr\":[{\"latitude\":37.565364,\"longitude\":126.985554},\
 	{\"latitude\":37.544172,\"longitude\":127.067588},\
 	{\"latitude\":37.487466,\"longitude\":127.026868},\
 	{\"latitude\":37.508402,\"longitude\":126.941398}]}";
-
+	
 
     vector<Position> positions;
     initPositions(positions, tmp);
@@ -83,7 +86,8 @@ int main(int argc, char *argv[])
 
 	TOMSA tomsa(positions);
     Position midPoint = tomsa.start();
-
+	
+	cout << " < ±¸ÇØÁø ÃÖÀûÇØ(ÁÂÇ¥) >" << endl;
 	cout.precision(6);
     cout << fixed << "{ \"latitude\": " << midPoint.getLatitude()
         << ", \"longitude\": " << midPoint.getLongitude() << " }" << endl;

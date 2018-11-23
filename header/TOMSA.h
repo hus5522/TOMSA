@@ -23,7 +23,9 @@ public:
 private:	
 	Position getCenterOfGravity();
 	int getPathTime(const Position &src, const Position &dest);
+	string getPath(const Position &src, const Position &dest);
 	bool isOptimizedResult(vector<int> times, int userCnt);
+	bool isOptimizedResult(int **time, int userCnt, int* greatSolution);
 };
 
 #endif
