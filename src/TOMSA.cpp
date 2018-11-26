@@ -1,7 +1,7 @@
 #include <TOMSA.h>
 #include <PointInPolygonAlgorithm.h>
 #include <ODsay.h>
-#include <math.h>
+#include <cmath>
 #include <utility>
 #include <algorithm>
 #include <UntwistLine.h>

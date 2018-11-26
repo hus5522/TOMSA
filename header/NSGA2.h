@@ -3,23 +3,27 @@
 
 #include <vector>
 #include <Position.h>
-#include<set>
+#include <set>
+#include <Population.h>
 
 using namespace std;
 
 class NSGA2
 {
 private:
-	vector<Position> users;
+	vector<Population> pop;		// 유전자 개수(g) * 목적함수의 값 개수(f) : (g*f) 배열
+	const int maxGeneration = 50;	// 최대 유전 횟수
+	const int geneCnt = 10;		//유전자 수
 
 public:
-	// times: n개의 목적함수(user)에서 파레토 최적 좌표의 개수 만큼의 데이터
-	vector<set<int>> fastNondominatedSort(vector<vector<int>> &times);
-	vector<vector<int>> crowdingDistanceAssignment(vector<vector<int>> &times, vector<set<int>> &front);
-	bool dominates(vector<int> &p, vector<int> &q);
+	vector<vector<int>> fastNondominatedSort(vector<Population> &pop);	// 반환값 front
+	vector<Population> calcCrowdingDistance(vector<Population> &pop, vector<vector<int>> &front);
+	vector<Population> sortPopulation(vector<Population> &pop);
+	bool dominates(Population &p, Population &q);		// p가 q를 지배하는지 판단
+	vector<vector<int>> nsga2();
 
 public:
-	NSGA2(vector<Position> &users);
+	NSGA2(vector<Population> &pop);
 	~NSGA2();
 };
 
