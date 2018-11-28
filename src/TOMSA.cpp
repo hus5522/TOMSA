@@ -10,24 +10,24 @@
 TOMSA::TOMSA(vector<Position> points)
 	:users(points)
 {
-	// °æ°è ¹üÀ§ ¼³Á¤
+	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	boudaryPoints = ConvexHull::getConvexHull(points);
 }
 
 
-/* ÀÔ·ÂµÈ À¯Àúµé ÁÂÇ¥¿Í ÀÌµ¿½Ã°£¿¡ ±â¹ÝÇÏ¿© Áß°£°ªÀ» Ã£´Â ¾Ë°í¸®Áò
-* return Positionnn : ÃÖÀûÀÇ Áß°£ ÁÂÇ¥ °ª
+/* ï¿½Ô·Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½
+* return Positionnn : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½
 */
 Position TOMSA::start()
 {
 	const bool NOT_INSIDE = false;
-	double latVector = 0, lonVector = 0;		// Áß°£°ª¿¡ ´ëÇÑ º¤ÅÍµéÀÇ ÇÕ ÀúÀå
-	int consideredUserCnt = users.size();	// °í·ÁÇØ¾ß µÉ À¯Àú ¼ö
+	double latVector = 0, lonVector = 0;		// ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	int consideredUserCnt = users.size();	// ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
 	Position midPoint = getCenterOfGravity();
 	PointInPolygonAlgorithm PIPAlgorithm;
 
-	vector<int> movingTimes;	// À¯ÀúµéÀÇ ÀÌµ¿½Ã°£ ÀúÀå
+	vector<int> movingTimes;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int avgTime = 0;
 	int gen = 1;
 	while (gen <= 20) 
@@ -35,16 +35,15 @@ Position TOMSA::start()
 		if (gen++ % 10 == 0)
 			MIN_TIME_INTERVAL += 5;
 
-		printf("%lf, %lf\n", midPoint.getLatitude(), midPoint.getLongitude());
 		movingTimes.clear();
 		avgTime = 0;
 
-		// ÇöÀç Áß°£ ÁÂÇ¥±îÁöÀÇ ÀÌµ¿½Ã°£ ±¸ÇÏ±â, ´ÙÀ½ ÁÂÇ¥·Î ÀÌµ¿ÇÏ±âÀ§ÇÑ º¤ÅÍ °è»ê
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		for (Position point : users) {
 			int time = getPathTime(point, midPoint);
 			movingTimes.push_back(time);
 			
-			// vector °ª ´õÇÏ±â
+			// vector ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
 			Position unitVector = getUnitVector(point, midPoint);
 			latVector += unitVector.getLatitude() * time;
 			lonVector += unitVector.getLongitude() * time;
@@ -54,33 +53,27 @@ Position TOMSA::start()
 		avgTime /= users.size();
 		latVector /= (avgTime * users.size());
 		lonVector /= (avgTime * users.size());
-
-		for (int t : movingTimes)
-			printf("%d ", t);
-		printf("\n");
 		
-
-		// ÇöÀç Áß°£ ÁÂÇ¥°¡ ÃÖÀûÀÇ °á°úÀÎÁö ÆÇ´Ü
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
 		if (isOptimizedResult(movingTimes, consideredUserCnt))
 			return midPoint;
 
-		// Áß°£ÁÂÇ¥ ÀÌµ¿
+		// ï¿½ß°ï¿½ï¿½ï¿½Ç¥ ï¿½Ìµï¿½
 		midPoint.setPosition(midPoint.getLatitude()  + latVector / users.size(),
 			midPoint.getLongitude() + lonVector / users.size());
 
-		// ¿µ¿ª ¹Û¿¡ ¹þ¾î³µ´ÂÁö È®ÀÎ
-		// TODO : ¹þ¾î³µÀ»¶§ ÁÂÇ¥¸¦ ¾îµð·Î ¿Å±æÁö »ý°¢ÇØ¾ßµÊ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½î³µï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
+		// TODO : ï¿½ï¿½ï¿½î³µï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Å±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ßµï¿½
 		if (PIPAlgorithm.isInside(midPoint, boudaryPoints) == NOT_INSIDE) {
-			// Àç½ÃÀÛ ÇÏ±âÀ§ÇØ ¹«°ÔÁß½É °ªÀ¸·Î ÃÊ±âÈ­
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 			midPoint = getCenterOfGravity();
 			consideredUserCnt--;
-			printf("Áß°£À¸·Î~~~\n");
 		}
 	}
 }
 
-/* ¹«°ÔÁß½É ÁÂÇ¥ ±¸ÇÏ±â
- * return Position : ¹«°ÔÁß½É ÁÂÇ¥
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½Ï±ï¿½
+ * return Position : ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ ï¿½ï¿½Ç¥
  */
 Position TOMSA::getCenterOfGravity()
 {
@@ -96,9 +89,9 @@ Position TOMSA::getCenterOfGravity()
 	return Position(latitude, longitude);
 }
 
-/* ÃÖ¼Ò ÀÌµ¿ °æ·Î ½Ã°£À» Ã£¾Æ ¹ÝÈ¯
- * parameters -> src : ½ÃÀÛ ÁÂÇ¥, dest : ¸ñÀûÁö ÁÂÇ¥
- * return int : ÃÖ¼Ò½Ã°£
+/* ï¿½Ö¼ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½È¯
+ * parameters -> src : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥, dest : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥
+ * return int : ï¿½Ö¼Ò½Ã°ï¿½
  */
 int TOMSA::getPathTime(const Position &src, const Position &dest)
 {
@@ -106,18 +99,18 @@ int TOMSA::getPathTime(const Position &src, const Position &dest)
 }
 
 
-/* Ã£Àº Áß°£ °ªÀÌ ÃÖÀûÈ­µÈ °á°úÀÎÁö ÆÇº°ÇÏ´Â ¸Þ¼Òµå
- * MIN_TIME_INTERVAL °£°Ý¿¡ ¼ÓÇÏ´Â À¯ÀúµéÀ» ±×·ìÈ­ ÇÏ¿©
- * Æ¯Á¤ ÀÎ¿øÀÌ ±×·ì¿¡ ¼ÓÇØÀÖ´Ù¸é ÃÖÀûÈ­ µÇ¾ú´Ù ÆÇ´Ü
- * parameters -> times : À¯ÀúµéÀÇ ÀÌµ¿½Ã°£, userCnt : ¸¸Á·ÇØ¾ßµÉ À¯Àú ¼ö
+/* Ã£ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Çºï¿½ï¿½Ï´ï¿½ ï¿½Þ¼Òµï¿½
+ * MIN_TIME_INTERVAL ï¿½ï¿½ï¿½Ý¿ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½È­ ï¿½Ï¿ï¿½
+ * Æ¯ï¿½ï¿½ ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½×·ì¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½Ç¾ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
+ * parameters -> times : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ã°ï¿½, userCnt : ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ßµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
  * return true/false 
  */
 bool TOMSA::isOptimizedResult(vector<int> times, int userCnt)
 {
 	sort(times.begin(), times.end());
 
-	int minTimeOfGroup = -1;	// ÇØ´ç ±×·ì¾ÈÀÇ À¯ÀúÀÇ ÃÖ¼Ò ÀÌµ¿½Ã°£
-	int userCntInGroup = 0;		// ÇÑ ±×·ìÀ¸·Î ¹­¿©ÀÖ´Â À¯Àú ¼ö
+	int minTimeOfGroup = -1;	// ï¿½Ø´ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ ï¿½Ìµï¿½ï¿½Ã°ï¿½
+	int userCntInGroup = 0;		// ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
 	for (int time : times) {
 		if (userCntInGroup == 0) {

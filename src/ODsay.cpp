@@ -5,8 +5,7 @@
 
 string ODsay::getPathInfo(const Position &src, const Position &dest)
 {
-	const wchar_t *subUri = L"/v1/api/searchPubTransPath";    
-
+	const string subUri = "/v1/api/searchPubTransPath";    
 	// 요청 보낼 주소 및 인자 설정
     http_client client(baseUri);
     uri_builder builder(subUri);
@@ -58,7 +57,6 @@ int ODsay::getPathMinTime(const Position &src, const Position &dest)
 		const int walkingDistPerMinute = 66.6;	// 분당 걸은 거리
 		// 위도 경도 거리를 계산하여 도보시간 구함
 		minTime = Geolocation::computeDistanceTwoPos(src, dest) * walkingDistPerMinute;
-		cout << "ODsay exception : " << exception << endl;
 	}
 
     return minTime;

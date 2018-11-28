@@ -11,27 +11,7 @@
 #include <UntwistLine.h>
 #include <algorithm>
 
-#include <Windows.h>		// todo : 삭제
-
 using namespace std;
-
-
-void timeMeasurement(vector<Position> &positions)
-{
-	LARGE_INTEGER liCounter1, liCounter2, liFrequency;
-
-	// 주파수(1초당 증가되는 카운트수)를 구한다.
-	QueryPerformanceFrequency(&liFrequency);
-	QueryPerformanceCounter(&liCounter1);
-
-	ODsay odsay;
-	odsay.getPathMinTime(positions[0], positions[1]);
-	/*TOMSA tomsa(positions);
-	Position midPoint = tomsa.start();*/
-
-	QueryPerformanceCounter(&liCounter2);
-	printf("수행시간 : %lf 초\n", (double)(liCounter2.QuadPart - liCounter1.QuadPart) / (double)liFrequency.QuadPart);
-}
 
 void initPositions(vector<Position> &positions, char *jsonString)
 {
@@ -52,10 +32,10 @@ void initPositions(vector<Position> &positions, char *jsonString)
 
 int main(int argc, char *argv[])
 {
-    /*if(argc < 2){
-        cout << "argument is few" << endl;
-        exit(1);
-    }*/
+    if(argc < 2){
+		cout << fixed << "{ \"latitude\": 37.565393, \"longitude\":  126.977817}" << endl;
+		return 0;
+    }
 
 	// 세종대 건대 부근
 	/*char tmp[] = "{\"userArr\":[{\"latitude\":37.550277,\"longitude\":127.073053},\
@@ -76,40 +56,8 @@ int main(int argc, char *argv[])
 	{\"latitude\":37.508402,\"longitude\":126.941398}]}";*/
 
     vector<Position> positions;
-    /*initPositions(positions, tmp);*/
+    initPositions(positions, argv[1]);
 
-	positions.push_back({
-
-
-		37.5574771,
-		126.9998631
-
-
-		});
-	positions.push_back({
-
-		37.567072,
-		127.0501933
-
-		});
-	positions.push_back({
-
-		37.41132,
-		127.1264723
-
-		});
-	positions.push_back({
-
-		37.451854,
-		126.9999753
-
-		});
-	positions.push_back({
-
-		37.4930835,
-		126.8935978
-
-		});
 	TOMSA tomsa(positions);
     Position midPoint = tomsa.start();
 

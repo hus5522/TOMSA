@@ -1,5 +1,3 @@
-/home/kuril/workspace/TOMSA/CMakeFiles/edit_cache.dir
-/home/kuril/workspace/TOMSA/CMakeFiles/rebuild_cache.dir
 /home/kuril/workspace/TOMSA/src/CMakeFiles/rebuild_cache.dir
 /home/kuril/workspace/TOMSA/src/CMakeFiles/edit_cache.dir
 /home/kuril/workspace/TOMSA/src/CMakeFiles/../TOMSA.dir

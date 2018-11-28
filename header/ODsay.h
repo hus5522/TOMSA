@@ -15,8 +15,8 @@ using namespace std;
 class ODsay
 {
 private:
-	const wchar_t *apiKey = L"+l2drsr2yXqK+H7SHxhFuo8EF3vfOgpZlFGF2/lbkm8";
-	const wchar_t *baseUri = L"https://api.odsay.com/";
+	const string apiKey = "+l2drsr2yXqK+H7SHxhFuo8EF3vfOgpZlFGF2/lbkm8";
+	const string baseUri = "https://api.odsay.com/";
 
     
 public:
