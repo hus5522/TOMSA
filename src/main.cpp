@@ -70,17 +70,46 @@ int main(int argc, char *argv[])
 	{\"latitude\":37.531359,\"longitude\":127.083799}]}";*/
 
 	// 강북 강동 강남 강서
-	char tmp[] = "{\"userArr\":[{\"latitude\":37.565364,\"longitude\":126.985554},\
+	/*char tmp[] = "{\"userArr\":[{\"latitude\":37.565364,\"longitude\":126.985554},\
 	{\"latitude\":37.544172,\"longitude\":127.067588},\
 	{\"latitude\":37.487466,\"longitude\":127.026868},\
-	{\"latitude\":37.508402,\"longitude\":126.941398}]}";
-
+	{\"latitude\":37.508402,\"longitude\":126.941398}]}";*/
 
     vector<Position> positions;
-    initPositions(positions, tmp);
+    /*initPositions(positions, tmp);*/
 
-	//timeMeasurement(positions);
+	positions.push_back({
 
+
+		37.5574771,
+		126.9998631
+
+
+		});
+	positions.push_back({
+
+		37.567072,
+		127.0501933
+
+		});
+	positions.push_back({
+
+		37.41132,
+		127.1264723
+
+		});
+	positions.push_back({
+
+		37.451854,
+		126.9999753
+
+		});
+	positions.push_back({
+
+		37.4930835,
+		126.8935978
+
+		});
 	TOMSA tomsa(positions);
     Position midPoint = tomsa.start();
 

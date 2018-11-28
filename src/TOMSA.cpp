@@ -1,7 +1,7 @@
 #include <TOMSA.h>
 #include <PointInPolygonAlgorithm.h>
 #include <ODsay.h>
-#include <math.h>
+#include <cmath>
 #include <utility>
 #include <algorithm>
 #include <UntwistLine.h>
@@ -28,9 +28,16 @@ Position TOMSA::start()
 	PointInPolygonAlgorithm PIPAlgorithm;
 
 	vector<int> movingTimes;	// 유저들의 이동시간 저장
-	while (true) 
+	int avgTime = 0;
+	int gen = 1;
+	while (gen <= 20) 
 	{	
+		if (gen++ % 10 == 0)
+			MIN_TIME_INTERVAL += 5;
+
+		printf("%lf, %lf\n", midPoint.getLatitude(), midPoint.getLongitude());
 		movingTimes.clear();
+		avgTime = 0;
 
 		// 현재 중간 좌표까지의 이동시간 구하기, 다음 좌표로 이동하기위한 벡터 계산
 		for (Position point : users) {
@@ -38,10 +45,21 @@ Position TOMSA::start()
 			movingTimes.push_back(time);
 			
 			// vector 값 더하기
-			latVector += (point.getLatitude() - midPoint.getLatitude()) * time / 10.0;
-			lonVector += (point.getLongitude() - midPoint.getLongitude()) * time / 10.0;
+			Position unitVector = getUnitVector(point, midPoint);
+			latVector += unitVector.getLatitude() * time;
+			lonVector += unitVector.getLongitude() * time;
+
+			avgTime += time;
 		}
+		avgTime /= users.size();
+		latVector /= (avgTime * users.size());
+		lonVector /= (avgTime * users.size());
+
+		for (int t : movingTimes)
+			printf("%d ", t);
+		printf("\n");
 		
+
 		// 현재 중간 좌표가 최적의 결과인지 판단
 		if (isOptimizedResult(movingTimes, consideredUserCnt))
 			return midPoint;
@@ -56,12 +74,8 @@ Position TOMSA::start()
 			// 재시작 하기위해 무게중심 값으로 초기화
 			midPoint = getCenterOfGravity();
 			consideredUserCnt--;
+			printf("중간으로~~~\n");
 		}
-		/*
-		else if (isOnWater()) {
-			// 물 위라면 좌표 값을 어디로?
-		}
-		*/
 	}
 }
 
@@ -100,9 +114,6 @@ int TOMSA::getPathTime(const Position &src, const Position &dest)
  */
 bool TOMSA::isOptimizedResult(vector<int> times, int userCnt)
 {
-	// 그룹화될 유저들의 이동시간의 범위
-	const int MIN_TIME_INTERVAL = 10;
-
 	sort(times.begin(), times.end());
 
 	int minTimeOfGroup = -1;	// 해당 그룹안의 유저의 최소 이동시간
@@ -125,4 +136,14 @@ bool TOMSA::isOptimizedResult(vector<int> times, int userCnt)
 	if (userCntInGroup >= userCnt)
 		return true;
 	return false;
+}
+
+Position TOMSA::getUnitVector(const Position & src, const Position & dest)
+{
+	double latVector = src.getLatitude() - dest.getLatitude();
+	double lonVector = src.getLongitude() - dest.getLongitude();
+	double unitVectorLen = sqrt(pow(latVector, 2)
+		+ pow(lonVector, 2));
+
+	return Position(latVector / unitVectorLen / 10, lonVector / unitVectorLen / 10);
 }

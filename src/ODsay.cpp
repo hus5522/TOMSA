@@ -25,7 +25,6 @@ string ODsay::getPathInfo(const Position &src, const Position &dest)
 		return response.extract_string();
 	}).then([&](string_t str) {
 		pathInfo = conversions::to_utf8string(str);
-		cout << pathInfo << endl << endl;
 	}).wait();
 
     return pathInfo;
@@ -38,13 +37,22 @@ int ODsay::getPathMinTime(const Position &src, const Position &dest)
 	rapidjson::Document document;
 	document.Parse(jsonPathInfo.c_str());
 
-	int minTime;
+	int minTime = 0;
 	try {
 		//result값 있는지 확인
 		if (!document.HasMember("result"))
 			throw document["error"]["code"].GetString();	// error 코드 번호 던짐
 		// 최소 시간 가져오기
 		minTime = document["result"]["path"][0]["info"]["totalTime"].GetInt();
+		// 지하철, 버스 시간만 가져오기
+		/*bool walk = true;
+		const rapidjson::Value &transport = document["result"]["path"][0]["subPath"];
+		for (auto &trans : transport.GetArray()) {
+			if (walk || trans["trafficType"] != 3) {
+				minTime += trans["sectionTime"].GetInt();
+				walk = false;
+			}
+		}*/
 	}
 	catch (const char* exception) {
 		const int walkingDistPerMinute = 66.6;	// 분당 걸은 거리
