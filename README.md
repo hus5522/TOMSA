@@ -41,6 +41,8 @@
 
 ![Process](./Image/Process.PNG)
 
+![Process2](./Image/Process2.PNG)
+
 
 ## 어플 '다모여'의 데이터 흐름도
 
